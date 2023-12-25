@@ -1,15 +1,18 @@
 // importing express, which is a function that is used to create an express application stored in the app variable
-require("dotenv").config();
-
 const express = require("express");
 const app = express();
 const cors = require("cors");
+require("dotenv").config();
+
 const Note = require("./models/note");
 
-app.use(express.json());
-app.use(express.static("dist"));
-app.use(cors());
-app.use(express.static("build"));
+const requestLogger = (request, response, next) => {
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body:  ", request.body);
+  console.log("---");
+  next();
+};
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
@@ -26,6 +29,11 @@ const errorHandler = (error, request, response, next) => {
 
   next(error);
 };
+
+app.use(cors());
+app.use(express.json());
+app.use(requestLogger);
+app.use(express.static("build"));
 
 //get all notes
 app.get("/api/notes", (request, response) => {
