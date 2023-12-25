@@ -34,6 +34,7 @@ app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
 app.use(express.static("build"));
+app.use(express.static("dist"));
 
 //get all notes
 app.get("/api/notes", (request, response) => {
@@ -103,7 +104,7 @@ app.post("/api/notes", (request, response, next) => {
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
